@@ -1,0 +1,78 @@
+# =========================
+# MODEL CONFIG (YOLO)
+# =========================
+model:
+  path: weights/yolov11s.pt   # đường dẫn model
+  conf: 0.3                   # confidence threshold
+  iou: 0.5                    # IoU threshold
+  classes: [0]                # 0 = person
+  device: cuda                # cpu | cuda
+  imgsz: 640                  # input size
+
+# =========================
+# TRACKING CONFIG (ByteTrack)
+# =========================
+tracking:
+  tracker_type: bytetrack
+  max_age: 30                 # frame giữ track khi mất detection
+  min_hits: 3                 # số frame để xác nhận object
+  iou_threshold: 0.3
+
+# =========================
+# RE-ID CONFIG (OSNet)
+# =========================
+reid:
+  model_path: weights/osnet.pt
+  similarity_threshold: 0.7   # độ giống để match ID
+  max_gallery_size: 100       # số feature lưu lại
+
+# =========================
+# TRANSFORM (Bird-view)
+# =========================
+transform:
+  enabled: false              # bật/tắt homography
+  source_points: []           # điền nếu dùng
+  target_size: [600, 800]
+
+# =========================
+# ANALYTICS
+# =========================
+analytics:
+  min_stay_duration: 2.0      # giây
+  fps: 24
+
+# =========================
+# HEATMAP
+# =========================
+heatmap:
+  kernel_size: 25
+  sigma: 10
+  normalize: true
+
+# =========================
+# DATABASE
+# =========================
+database:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: password
+  db_name: studio_db
+
+# =========================
+# VIDEO / STREAM
+# =========================
+video:
+  source: assets/test.mp4     # hoặc RTSP link
+  batch_size: 20              # dùng cho detect batch
+  save_output: true
+  output_dir: output_videos
+  fps: 24
+
+# =========================
+# API (FastAPI)
+# =========================
+api:
+  host: 0.0.0.0
+  port: 8000
+  debug: true
