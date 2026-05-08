@@ -27,27 +27,11 @@ reid:
   max_gallery_size: 100       # số feature lưu lại
 
 # =========================
-# TRANSFORM (Bird-view)
-# =========================
-transform:
-  enabled: false              # bật/tắt homography
-  source_points: []           # điền nếu dùng
-  target_size: [600, 800]
-
-# =========================
 # ANALYTICS
 # =========================
 analytics:
   min_stay_duration: 2.0      # giây
   fps: 24
-
-# =========================
-# HEATMAP
-# =========================
-heatmap:
-  kernel_size: 25
-  sigma: 10
-  normalize: true
 
 # =========================
 # DATABASE
@@ -76,3 +60,37 @@ api:
   host: 0.0.0.0
   port: 8000
   debug: true
+
+  # ── Homography & Bird's-eye View ────────────────────────────
+homography:
+  # --- Tọa độ 4 góc phòng trên ảnh camera (pixel) ---
+  # Thứ tự: top-left, top-right, bottom-right, bottom-left
+  src_points:
+    - [513, 150]     # góc trên-trái (TL)
+    - [906, 150]   # góc trên-phải (TR)
+    - [1278, 718]   # góc dưới-phải (BR)
+    - [278, 718]    # góc dưới-trái (BL)
+
+  # --- Tọa độ 4 điểm tương ứng trên canvas Bird's-eye view (pixel) ---
+  # Thứ tự phải khớp src_points: TL, TR, BR, BL
+  dst_points:
+    - [0,   0]      # TL canvas
+    - [600, 0]      # TR canvas
+    - [600, 800]    # BR canvas
+    - [0,   800]    # BL canvas
+
+  # --- Kích thước canvas Bird's-eye view (pixel) ---
+  floor_canvas_w: 600
+  floor_canvas_h: 800
+
+  # --- Kích thước phòng thực tế (mét) ---
+  real_width_m:  8.0
+  real_height_m:  10.0
+
+# ── Heatmap ──────────────────────────────────────────────────
+heatmap:
+  gaussian_ksize: 51      # Kernel Gaussian (số lẻ). Tăng → loang rộng hơn
+  gaussian_sigma: 20.0    # Sigma. Tăng → mềm hơn
+  alpha:          0.60    # Độ đục khi blend heatmap lên BEV (0–1)
+  decay_rate:     0.0     # 0 = tích lũy mãi; 0.005 = giảm dần theo thời gian
+  colormap:       JET     # JET | HOT | INFERNO (chỉ dùng thông tin, code dùng cv2.COLORMAP_JET)
